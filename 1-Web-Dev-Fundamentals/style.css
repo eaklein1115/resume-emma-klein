@@ -1,0 +1,59 @@
+.container {
+    display:grid;
+    height:100vh;
+    text-align:center;
+}
+.center {
+    top: 100px;
+    right: 0px;
+    bottom: 0px;
+    left: 0%;
+    background:rgb(255, 167, 227)
+}
+.table {
+    width:100%;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    border: 3px dotted;
+    text-align:center;
+}
+.tr, th {
+    font-family: Righteous;
+    font-size: 120%;
+    text-align:center;
+}
+.td {
+    font-family: Abel;
+    font-style: normal;
+    text-align:center;
+}
+.image1 {
+    display:block;
+    margin:0px auto;
+    width: 450px;
+    margin-top:7%;
+    border: 5px solid;
+}
+.image2 {
+    display:block;
+    margin:0px auto;
+}
+.image3 {
+    display:inline-block;
+    height:0%;
+    width:100%;
+    margin:10px auto;
+   
+}
+.contactme {
+    font-family: Righteous;
+    text-align:center;
+    list-style-type:none;
+    margin-top:10%;
+    font-size: 150%
+}
+* {
+    box-sizing: border-box;
+  }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matching Game</title>
+<style>
+    body {
+        font-family: 'Press Start 2P', cursive;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        font-size: 2.5em;
+        margin: 20px 0;
+        text-transform: uppercase;
+    }
+    #game-board {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+    }
+    .card {
+        width: calc(25% - 20px);
+        margin: 10px;
+        position: relative;
+        cursor: pointer;
+        perspective: 1000px;
+    }
+    .card-inner {
+        width: 100%;
+        height: 150px;
+        text-align: center;
+        transition: transform 0.5s;
+        transform-style: preserve-3d;
+    }
+    .card:hover .card-inner, .card.flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+    }
+    .card-front {
+        background-color: #6C63FF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .card-back {
+        background-color: #FF6B6B;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: rotateY(180deg);
+    }
+    .card-content {
+        font-size: 2em;
+    }
+</style>
+</head>
+<body>
+    <h1>Matching Game</h1>
+    <div id="game-board"></div>
+
+    <script>
+        const symbols = ['🎮', '👾', '🕹️', '🚀', '💾', '👽'];
+        let shuffledSymbols = [];
+        let flippedCards = [];
+        let matchedCards = [];
+        let numMatches = 0;
+
+        const gameBoard = document.getElementById('game-board');
+
+        function initializeGame() {
+            generateShuffledSymbols();
+            renderGameBoard();
+        }
+
+        function generateShuffledSymbols() {
+            const combinedSymbols = symbols.concat(symbols);
+            shuffledSymbols = combinedSymbols.sort(() => Math.random() - 0.5);
+        }
+
+        function renderGameBoard() {
+            gameBoard.innerHTML = '';
+            shuffledSymbols.forEach((symbol, index) => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.index = index;
+
+                const cardInner = document.createElement('div');
+                cardInner.classList.add('card-inner');
+
+                const cardFront = document.createElement('div');
+                cardFront.classList.add('card-front');
+                cardFront.innerHTML = '<span class="card-content">?</span>';
+
+                const cardBack = document.createElement('div');
+                cardBack.classList.add('card-back');
+                cardBack.innerHTML = `<span class="card-content">${symbol}</span>`;
+
+                cardInner.appendChild(cardFront);
+                cardInner.appendChild(cardBack);
+                card.appendChild(cardInner);
+
+                card.addEventListener('click', () => {
+                    if (!flippedCards.includes(card) && flippedCards.length < 2) {
+                        flipCard(card);
+                        flippedCards.push(card);
+                        if (flippedCards.length === 2) {
+                            setTimeout(checkMatch, 1000);
+                        }
+                    }
+                });
+
+                gameBoard.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            card.classList.add('flipped');
+        }
+
+        function unflipCards() {
+            flippedCards.forEach(card => {
+                card.classList.remove('flipped');
+            });
+            flippedCards = [];
+        }
+
+        function checkMatch() {
+            const [firstCard, secondCard] = flippedCards;
+            const symbol1 = shuffledSymbols[firstCard.dataset.index];
+            const symbol2 = shuffledSymbols[secondCard.dataset.index];
+
+            if (symbol1 === symbol2) {
+                matchedCards.push(firstCard, secondCard);
+                numMatches++;
+                if (numMatches === symbols.length) {
+                    setTimeout(() => {
+                        alert('Congratulations! You matched all the cards!');
+                        resetGame();
+                    }, 500);
+                }
+            } else {
+                unflipCards();
+            }
+        }
+
+        function resetGame() {
+            shuffledSymbols = [];
+            flippedCards = [];
+            matchedCards = [];
+            numMatches = 0;
+            initializeGame();
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>
